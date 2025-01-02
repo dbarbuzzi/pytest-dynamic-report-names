@@ -1,0 +1,17 @@
+[project]
+name = "pytest-dynamic-report-names"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["ruff ~= 0.8"]
+test = ["pytest != 8.3"]
+
+[project.entry-points.pytest11]
+pytest_dynamic_report_names = "pytest_dynamic_report_names.plugin"
+
+[tool.pytest.ini_options]
+addopts = "-vv --junit-xml=oh-no.xml"
