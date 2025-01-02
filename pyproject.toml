@@ -14,4 +14,4 @@ test = ["pytest != 8.3"]
 pytest_dynamic_report_names = "pytest_dynamic_report_names.plugin"
 
 [tool.pytest.ini_options]
-addopts = "-vv --junit-xml=oh-no.xml"
+addopts = "-vv --junit-xml=test-results/oh-no.xml"
