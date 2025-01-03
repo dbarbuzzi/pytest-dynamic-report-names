@@ -5,3 +5,4 @@ TODO
 - [ ] rename: pytest-nm-plugin, pytest-nm-releng-plugin
   - [ ] update env var names/prefix
   - [ ] update README with new name/env vars
+- [ ] add tests
