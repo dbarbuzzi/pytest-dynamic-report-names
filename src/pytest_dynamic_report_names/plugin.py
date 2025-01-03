@@ -1,28 +1,31 @@
-from datetime import datetime, timezone
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
-import pytest
+
+def get_utc_timestamp() -> float:
+    return datetime.now(timezone.utc).timestamp()
 
 
-def pytest_load_initial_conftests(
-    early_config: pytest.Config, args: list[str], parser: pytest.Parser
-):
-    # debug - write original CLI args
-    with open("txt-args-1", "w") as f:
-        f.write(str(args))
+def pytest_load_initial_conftests(_early_config, args: list[str], _parser):
+    new_args: list[str] = []
 
-    if not (junitxml_base_dir := os.getenv("PDRN_JUNIT_BASE")):
-        return
+    # if PDRN_JUNIT_BASE is defined, prepare new --junit-xml flag
+    if junitxml_base_dir := os.getenv("PDRN_JUNIT_BASE"):
+        junitxml_file = Path(junitxml_base_dir) / f"{get_utc_timestamp()}.xml"
+        if prefix := os.getenv("PDRN_JUNIT_PREFIX"):
+            junitxml_file = junitxml_file.with_name(f"{prefix}{junitxml_file.name}")
+        new_args.append(f"--junit-xml={junitxml_file.as_posix()}")
 
-    junitxml_file = (
-        Path(junitxml_base_dir) / f"{datetime.now(timezone.utc).timestamp()}.xml"
-    )
-    if prefix := os.getenv("PDRN_JUNIT_PREFIX"):
-        junitxml_file = junitxml_file.with_name(f"{prefix}{junitxml_file.name}")
-    args[:] = [*args, f"--junit-xml={junitxml_file.as_posix()}"]
+    # if PDRN_COV_NAME is defined, prepare code coverage flags
+    if cc_package_name := os.getenv("PDRN_COV_NAME"):
+        new_args.extend(
+            [
+                f"--cov={cc_package_name}",
+                "--cov-append",
+                "--cov-report=html:coverage-html",
+                "--cov-report=json:coverage.json",
+            ]
+        )
 
-
-    # debug - write modified CLI args
-    with open("txt-args-2", "w") as f:
-        f.write(str(args))
+    args[:] = [*args, *new_args]
