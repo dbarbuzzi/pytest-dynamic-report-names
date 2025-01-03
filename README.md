@@ -5,7 +5,8 @@ A plugin for `pytest` to generate dynamic (timestamped) JUnit report file names.
 ## Installation
 
 ```shell
-# TODO (local install? git/github URL install?)
+# install the v0.1.0-beta tag from GitHub
+pip install https://github.com/dbarbuzzi/pytest-dynamic-report-names/archive/v0.1.0-beta.tar.gz
 ```
 
 ## Usage
